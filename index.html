@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Presupuesto Personal</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <img src="/Medios/Logo.png" alt="Logo Presupuesto Izquierda" class="logo-left">
+            <h1>Gestión de Presupuesto Personal</h1>
+            <img src="/Medios/Logo.png" alt="Logo Presupuesto Derecha" class="logo-right">
+        </div>
+    </header>
+    <main>
+        <section>
+            <h2>Bienvenido</h2>
+            <p>
+                Esta herramienta te ayudará a gestionar tus finanzas personales. Podrás registrar tus ingresos y gastos,
+                categorizarlos, y obtener un balance mensual que te permitirá tomar mejores decisiones financieras.
+            </p>
+        </section>
+        <section id="formulario">
+            <h2>Registrar Ingresos y Gastos</h2>
+            <form id="gastosForm">
+                <label for="ingresos">Ingresos Mensuales:</label>
+                <input type="number" id="ingresos" name="ingresos" placeholder="Ejemplo: 50000" required>
+                <label for="categoria">Categoría del gasto:</label>
+                <input type="text" id="categoria" name="categoria" placeholder="Ejemplo: Comida, Transporte" required>
+                <label for="monto">Monto del gasto:</label>
+                <input type="number" id="monto" name="monto" placeholder="Ejemplo: 1500" required>
+                <button type="submit">Agregar Gasto</button>
+            </form>
+        </section>
+        <section id="resultados">
+            <h2>Resultados</h2>
+            <button id="calcularBalance">Calcular Balance</button>
+            <button id="filtrar">Filtrar gastos por categoría</button>
+            <div id="resultado"></div>
+        </section>
+    </main>
+    <footer>
+        <p>Presupuesto mensual. © 2025</p>
+    </footer>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
