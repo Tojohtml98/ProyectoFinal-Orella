@@ -1,7 +1,8 @@
 body {
-  font-family: 'Roboto', Arial, sans-serif;
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
   background-color: #f9f9f9;
   color: #333;
 }
@@ -30,8 +31,9 @@ main {
 }
 
 section {
-  margin-bottom: 30px;
-  padding: 20px;
+  margin: 10px auto;
+  max-width: 800px; /* Limita el ancho máximo */
+  padding: 10px;
   background-color: #f7f7f7;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -61,7 +63,8 @@ input[type='number'] {
 }
 
 button {
-  padding: 10px 20px;
+  padding: 10px;
+  font-size: 16px;
   background-color: #28a745;
   color: white;
   border: none;
@@ -132,28 +135,51 @@ footer {
     object-fit: contain;
 }
 
-/* General styles */
+/* Estilos Generales */
 .header-container {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    background-color: #0056b3;
-    color: white;
-    padding: 20px;
-    border-bottom: 3px solid #004494;
+    align-items: center;
+    padding: 10px;
+    flex-wrap: wrap; /* Permite que los elementos se ajusten en pantallas pequeñas */
 }
 
-.header-container h1 {
-    margin: 0;
-    font-size: 1.8rem;
-    text-align: center;
-    flex-grow: 1;
+.logo-left, .logo-right {
+    max-width: 100px; /* Ajusta el tamaño de las imágenes */
+    height: auto;
 }
 
-/* Logo styles */
-.logo-left,
-.logo-right {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Para hacer responsive */
+@media (max-width: 600px) {
+    .header-container {
+        flex-direction: column; /* Cambia a diseño vertical */
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 1.5rem; /* Reduce el tamaño del título */
+    }
+
+    form input, form button {
+        width: 100%; /* Asegura que los inputs ocupen todo el ancho */
+    }
+}
+/* Estilos para pantallas más grandes */
+@media (min-width: 901px) {
+    .header-container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    p {
+        font-size: 1.2rem;
+    }
 }
