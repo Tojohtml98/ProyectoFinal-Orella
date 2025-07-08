@@ -50,36 +50,66 @@ document.getElementById("gastosForm").addEventListener("submit", (e) => {
     }
 });
 
-// Función para calcular el balance
-document.getElementById("calcularBalance").addEventListener("click", () => {
-    if (!presupuesto) {
-        mostrarMensaje("Por favor, ingresa tus ingresos primero.", "error");
-        return;
-    }
-    const balance = presupuesto.calcularBalance();
-    const resultadoDiv = document.getElementById("resultado");
-    resultadoDiv.innerHTML = `<p>Tu balance actual es: <strong>$${balance.toFixed(2)}</strong></p>`;
-});
+// Función para calcular el balance mensual
+function calcularBalance() {
+    const ingresos = parseFloat(document.getElementById("ingresos").value);
+    const gastosTotales = presupuesto.gastos.reduce((total, gasto) => total + gasto.monto, 0);
+    return ingresos - gastosTotales;
+}
 
 // Función para filtrar gastos por categoría
-document.getElementById("filtrar").addEventListener("click", () => {
-    const categoria = prompt("Ingresa la categoría que deseas filtrar:");
-    if (!categoria) return;
+document.getElementById('filtrar').addEventListener('click', async () => {
+  const { value: categoria } = await Swal.fire({
+    title: 'Filtrar gastos',
+    input: 'text',
+    inputLabel: 'Ingresa la categoría que deseas filtrar:',
+    inputPlaceholder: 'Ejemplo: Comida',
+    showCancelButton: true,
+  })
 
-    const gastosFiltrados = presupuesto.filtrarGastosPorCategoria(categoria);
-    const resultadoDiv = document.getElementById("resultado");
-    resultadoDiv.innerHTML = `<h3>Gastos en la categoría "${categoria}":</h3>`;
-    if (gastosFiltrados.length > 0) {
-        gastosFiltrados.forEach(gasto => {
-            resultadoDiv.innerHTML += `<p>Categoría: ${gasto.categoria}, Monto: $${gasto.monto.toFixed(2)}</p>`;
-        });
-    } else {
-        resultadoDiv.innerHTML += `<p>No se encontraron gastos en esta categoría.</p>`;
-    }
-});
+  if (categoria) {
+    const gastosFiltrados = presupuesto.filtrarGastosPorCategoria(categoria)
+    const resultadoDiv = document.getElementById('resultado')
+    resultadoDiv.innerHTML = `<h3>Gastos en la categoría "${categoria}":</h3>`
+    gastosFiltrados.forEach(gasto => {
+      resultadoDiv.innerHTML += `<p>Categoría: ${gasto.categoria}, Monto: $${gasto.monto}</p>`
+    })
+  }
+})
 
 // Función para mostrar mensajes
 function mostrarMensaje(mensaje, tipo) {
-    const resultadoDiv = document.getElementById("resultado");
-    resultadoDiv.innerHTML = `<div class="alert ${tipo}">${mensaje}</div>`;
+  const resultadoDiv = document.getElementById('resultado')
+  resultadoDiv.innerHTML = `<div class="alert ${tipo}">${mensaje}</div>`
 }
+
+async function cargarDatosIniciales() {
+  try {
+    const response = await fetch('data/gastos.json')
+    const datos = await response.json()
+    presupuesto.gastos = datos
+  } catch (error) {
+    console.error('Error al cargar los datos iniciales:', error)
+  }
+}
+document.addEventListener('DOMContentLoaded', cargarDatosIniciales)
+
+// Función para mostrar gastos
+function mostrarGastos() {
+  const listaGastos = document.createElement('ul')
+  presupuesto.gastos.forEach(gasto => {
+    const item = document.createElement('li')
+    item.textContent = `Categoría: ${gasto.categoria}, Monto: $${gasto.monto}`
+    listaGastos.appendChild(item)
+  })
+  document.getElementById('resultado').appendChild(listaGastos)
+}
+
+// Llama a esta función al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+  const ingresosGuardados = localStorage.getItem('ingresos')
+  if (ingresosGuardados) {
+    inicializarPresupuesto(parseFloat(ingresosGuardados))
+    cargarDatosIniciales()
+  }
+})
