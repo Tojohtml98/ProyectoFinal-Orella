@@ -1,63 +1,64 @@
 // Clase para gestionar el presupuesto
 class Presupuesto {
-    constructor(ingresos) {
-        this.ingresos = ingresos;
-        this.gastos = JSON.parse(localStorage.getItem("gastos")) || [];
-    }
+  constructor(ingresos) {
+    this.ingresos = ingresos
+    this.gastos = JSON.parse(localStorage.getItem('gastos')) || []
+  }
 
-    agregarGasto(categoria, monto) {
-        const nuevoGasto = { categoria, monto };
-        this.gastos.push(nuevoGasto);
-        localStorage.setItem("gastos", JSON.stringify(this.gastos));
-    }
+  agregarGasto(categoria, monto) {
+    const nuevoGasto = { categoria, monto }
+    this.gastos.push(nuevoGasto)
+    localStorage.setItem('gastos', JSON.stringify(this.gastos))
+  }
 
-    calcularBalance() {
-        const totalGastos = this.gastos.reduce((total, gasto) => total + gasto.monto, 0);
-        return this.ingresos - totalGastos;
-    }
+  calcularBalance() {
+    const totalGastos = this.gastos.reduce(
+      (total, gasto) => total + gasto.monto,
+      0,
+    )
+    return this.ingresos - totalGastos
+  }
 
-    filtrarGastosPorCategoria(categoria) {
-        return this.gastos.filter(gasto => gasto.categoria.toLowerCase() === categoria.toLowerCase());
-    }
+  filtrarGastosPorCategoria(categoria) {
+    return this.gastos.filter(
+      gasto => gasto.categoria.toLowerCase() === categoria.toLowerCase(),
+    )
+  }
 }
 
 // Variables globales
-let presupuesto;
+let presupuesto
 
-// Función para inicializar el presupuesto
+// Inicializar presupuesto
 function inicializarPresupuesto(ingresos) {
-    presupuesto = new Presupuesto(ingresos);
-    localStorage.setItem("ingresos", ingresos);
+  presupuesto = new Presupuesto(ingresos)
+  localStorage.setItem('ingresos', ingresos)
 }
 
-// Función para manejar el formulario
-document.getElementById("gastosForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const ingresos = parseFloat(document.getElementById("ingresos").value);
-    const categoria = document.getElementById("categoria").value;
-    const monto = parseFloat(document.getElementById("monto").value);
+// Manejar formulario de ingresos y gastos
+document.getElementById('gastosForm').addEventListener('submit', e => {
+  e.preventDefault()
+  const ingresos = parseFloat(document.getElementById('ingresos').value)
+  const categoria = document.getElementById('categoria').value
+  const monto = parseFloat(document.getElementById('monto').value)
 
-    if (!presupuesto) {
-        inicializarPresupuesto(ingresos);
-    }
+  if (!presupuesto) {
+    inicializarPresupuesto(ingresos)
+  }
 
-    if (categoria && monto > 0) {
-        presupuesto.agregarGasto(categoria, monto);
-        mostrarMensaje("Gasto agregado correctamente.", "success");
-        document.getElementById("gastosForm").reset();
-    } else {
-        mostrarMensaje("Por favor, completa todos los campos correctamente.", "error");
-    }
-});
+  if (categoria && monto > 0) {
+    presupuesto.agregarGasto(categoria, monto)
+    mostrarMensaje('Gasto agregado correctamente.', 'success')
+    document.getElementById('gastosForm').reset()
+  } else {
+    mostrarMensaje(
+      'Por favor, completa todos los campos correctamente.',
+      'error',
+    )
+  }
+})
 
-// Función para calcular el balance mensual
-function calcularBalance() {
-    const ingresos = parseFloat(document.getElementById("ingresos").value);
-    const gastosTotales = presupuesto.gastos.reduce((total, gasto) => total + gasto.monto, 0);
-    return ingresos - gastosTotales;
-}
-
-// Función para filtrar gastos por categoría
+// Botón para filtrar gastos
 document.getElementById('filtrar').addEventListener('click', async () => {
   const { value: categoria } = await Swal.fire({
     title: 'Filtrar gastos',
@@ -77,24 +78,26 @@ document.getElementById('filtrar').addEventListener('click', async () => {
   }
 })
 
-// Función para mostrar mensajes
+// Mostrar mensajes con SweetAlert2
 function mostrarMensaje(mensaje, tipo) {
-  const resultadoDiv = document.getElementById('resultado')
-  resultadoDiv.innerHTML = `<div class="alert ${tipo}">${mensaje}</div>`
+  Swal.fire({
+    text: mensaje,
+    icon: tipo,
+  })
 }
 
+// Cargar datos iniciales desde un JSON
 async function cargarDatosIniciales() {
   try {
     const response = await fetch('data/gastos.json')
     const datos = await response.json()
     presupuesto.gastos = datos
   } catch (error) {
-    console.error('Error al cargar los datos iniciales:', error)
+    Swal.fire('Error', 'No se pudieron cargar los datos iniciales', 'error')
   }
 }
-document.addEventListener('DOMContentLoaded', cargarDatosIniciales)
 
-// Función para mostrar gastos
+// Mostrar todos los gastos
 function mostrarGastos() {
   const listaGastos = document.createElement('ul')
   presupuesto.gastos.forEach(gasto => {
@@ -105,7 +108,7 @@ function mostrarGastos() {
   document.getElementById('resultado').appendChild(listaGastos)
 }
 
-// Llama a esta función al cargar la página
+// Al cargar la página, verificar si hay datos en localStorage
 document.addEventListener('DOMContentLoaded', () => {
   const ingresosGuardados = localStorage.getItem('ingresos')
   if (ingresosGuardados) {

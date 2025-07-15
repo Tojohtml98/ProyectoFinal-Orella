@@ -1,0 +1,11 @@
+{
+  "name": "gestion-de-presupuesto",
+  "version": "1.0.0",
+  "description": "Mi proyecto de Gestion",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Tojohtml98",
+  "license": "MIT"
+}

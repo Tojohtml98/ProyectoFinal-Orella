@@ -1,3 +1,15 @@
 {
-    "liveServer.settings.port": 5501
+  // Configuración para simular gastos en el Proyecto Final
+  "simularGastos": {
+    "habilitado": true,
+    "monedaPredeterminada": "USD",
+    "categorias": [
+      "Comida",
+      "Transporte",
+      "Entretenimiento",
+      "Servicios",
+      "Varios"
+    ],
+    "presupuestoMensual": 1000
+  }
 }
